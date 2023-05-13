@@ -1,0 +1,31 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Rok Przestępny";
+}
+
+<body>
+    <div class="text-center">
+        <h1 class="display-4">Czy Twój rok urodzenia jest przestępny?</h1>
+
+    </div>
+    <div class="text-center">
+        <link rel="stylesheet" href="~/css/StyleSheet.css" />
+        <form method="post">
+            <label style="float: left" asp-for="LeapYears.FirstName"></label>
+            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Wprowadź swoje imię" asp-for="LeapYears.FirstName" />
+            <label style="float: left" asp-for="LeapYears.BirthYear"></label>
+            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Podaj swój rok urodzenia" asp-for="LeapYears.BirthYear" />
+            <button type="submit" class="btn btn-primary">Zatwierdź</button>
+            @if (Model.LeapYears != null)
+            {
+                <div class="alert alert-primary" role="alert">@Model.AlertMessage</div>
+            }
+            <span asp-validation-for="LeapYears.FirstName" class="text-danger"></span><br />
+            <span asp-validation-for="LeapYears.BirthYear" class="text-danger"></span>
+        </form>
+    </div>
+</body>
+
+
+

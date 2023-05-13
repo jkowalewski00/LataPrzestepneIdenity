@@ -1,0 +1,69 @@
+﻿@page
+@model LataPrzestepneIdenity.Pages.HistoryModel
+
+@{
+    ViewData["Title"] = "History";
+}
+<link rel="stylesheet" href="~/css/StyleSheet.css" />
+
+<h1>History</h1>
+
+@if (Model.AddedData != null)
+{
+    <ul>
+        @foreach (var element in Model.AddedData)
+        {
+            @if (element.UserID == null && element.FirstName == null)
+            {
+                <li>
+                    <b>Dane: </b> NN <br>
+                    <b>Rok urodzenia:</b> @element.BirthYear - @(element.LeapYear ? "Rok przestepny" : "To nie jest rok przestepny") <br>
+                    <b>Data wprowadzenia: @element.Date;</b> 
+                </li>
+            }
+            else if (element.UserID == null && element.FirstName != null)
+            {
+                <li>
+                    <b>Dane:</b> @element.FirstName <br>
+                    <b>Rok urodzenia:</b> @element.BirthYear - @(element.LeapYear ? "Rok przestepny" : "To nie jest rok przestepny") <br>
+                    <b>Data wprowadzenia:</b> @element.Date
+                </li>
+            }
+            else if(element.UserID != null && element.FirstName == null)
+            {
+                <li>
+                    <b>Dane:</b> NN <br>
+                    <b>Rok urodzenia:</b> @element.BirthYear - @(element.LeapYear ? "Rok przestepny" : "To nie jest rok przestepny") <br>
+                    <b>User Name: </b> @element.UserName  <b>User ID: </b> @element.UserID <br>
+                    <b>Data wprowadzenia:</b> @element.Date <br>
+                    
+                </li>
+                <form method="post">
+                    <input type="hidden" name="id" value="@element.Id" />
+                    @if (element.UserID == Model.CurrentUser)
+                    {
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    }
+                </form>
+            }
+            else
+            {
+                <li>
+                    <b>Dane:</b> @element.FirstName <br>
+                    <b>Rok urodzenia:</b> @element.BirthYear - @(element.LeapYear ? "Rok przestepny" : "To nie jest rok przestepny") <br>
+                    <b>User Name: </b> @element.UserName <b>User ID: </b> @element.UserID <br>
+                    <b>Data wprowadzenia:</b> @element.Date
+                </li>
+                <form method="post">
+                    <input type="hidden" name="id" value="@element.Id" />
+                    @if (element.UserID == Model.CurrentUser)
+                    {
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    }
+                </form>
+            }
+
+    }
+    </ul>
+
+}
