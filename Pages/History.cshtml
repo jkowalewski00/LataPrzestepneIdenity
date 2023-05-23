@@ -67,3 +67,18 @@
     </ul>
 
 }
+@{
+    var prevDisabled = !Model.AddedData.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.AddedData.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./History"
+   asp-route-pageIndex="@(Model.AddedData.PageIndex - 1)"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="./History"
+   asp-route-pageIndex="@(Model.AddedData.PageIndex + 1)"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

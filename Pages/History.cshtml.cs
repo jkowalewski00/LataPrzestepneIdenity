@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using LataPrzestepneIdenity.Data;
+using Microsoft.Extensions.Configuration;
 using LataPrzestepneIdenity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -17,23 +18,27 @@ namespace LataPrzestepneIdenity.Pages
     {
         private readonly LataPrzestepneIdenity.Data.ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IConfiguration Configuration;
 
-        public HistoryModel(LataPrzestepneIdenity.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public HistoryModel(LataPrzestepneIdenity.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager, IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
+            Configuration = configuration;
         }
 
         [BindProperty]
         
-        public IList<LeapYears> AddedData { get; set; }
+        public PaginatedList<LeapYears> AddedData { get; set; }
 
         public string CurrentUser;
 
-        public void OnGet()
+        public async Task OnGetAsync(int? pageIndex)
         {
-            AddedData = _context.LeapYears.ToList();
-            CurrentUser = _userManager.GetUserId(User);
+            pageIndex = pageIndex ?? 1;
+            IQueryable<LeapYears> leapYears = _context.LeapYears.AsQueryable();
+            var pageSize = Configuration.GetValue("PageSize", 4);
+            AddedData = await PaginatedList<LeapYears>.CreateAsync(leapYears.AsNoTracking(), pageIndex.Value, pageSize);
         }
 
         public IActionResult OnPost()
@@ -47,7 +52,6 @@ namespace LataPrzestepneIdenity.Pages
                 _context.LeapYears.Remove(data);
                 _context.SaveChanges();
                 RedirectToAction("/History");
-                OnGet();
             }
 
            return Page();
